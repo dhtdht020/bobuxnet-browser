@@ -65,8 +65,16 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
         self.repaint()
 
         # Get index
-        xmlparser.parse(self, requests.get(f"https://raw.githubusercontent.com/dhtdht020/bobuxnet-sites/main/"
-                                        f"{tld}/{hostname}/index.xml").text)
+        request = requests.get(f"https://raw.githubusercontent.com/dhtdht020/bobuxnet-sites/main/"
+                     f"{tld}/{hostname}/index.xml")
+        if request.status_code == 200:
+            xmlparser.parse(self, request.text)
+        else:
+            xmlparser.add_heading(self, f"Can't connect to {url}!")
+            xmlparser.add_label(self, "This URL either does not exist, or BobuxNet is down. :(")
+            xmlparser.add_spacer(self, "50")
+            xmlparser.add_link(self, "Try Again", url)
+            xmlparser.add_link(self, "Go Back", self.previous_page())
 
 
     def clear_page(self):
@@ -88,8 +96,11 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
             return ""
 
     def back_button(self):
-        self.ui.AddressBar.setText(self.previous_page())
-        self.navigate()
+        try:
+            self.ui.AddressBar.setText(self.previous_page())
+            self.navigate()
+        except IndexError:
+            self.ui.statusbar.showMessage("There's nothing to go back to!")
 
 
 if __name__ == "__main__":

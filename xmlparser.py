@@ -23,9 +23,17 @@ def parse(context, xml):
                 elem.attrib["size"]
             except KeyError:
                 elem.attrib["size"] = "20"
+            try:
+                elem.attrib["alignment"]
+            except KeyError:
+                elem.attrib["alignment"] = "left"
+
 
             # Add heading
-            add_heading(context, text=elem.text, size=elem.attrib["size"], bold=elem.attrib["bold"])
+            add_heading(context, text=elem.text,
+                        size=elem.attrib["size"],
+                        bold=elem.attrib["bold"],
+                        alignment=elem.attrib["alignment"])
 
         if elem.tag == "label":
             # Error Handling
@@ -37,9 +45,17 @@ def parse(context, xml):
                 elem.attrib["size"]
             except KeyError:
                 elem.attrib["size"] = "12"
+            try:
+                elem.attrib["alignment"]
+            except KeyError:
+                elem.attrib["alignment"] = "left"
 
             # Add Label
-            add_label(context, text=elem.text, size=elem.attrib["size"], bold=elem.attrib["bold"])
+            add_label(context,
+                      text=elem.text,
+                      size=elem.attrib["size"],
+                      bold=elem.attrib["bold"],
+                      alignment=elem.attrib["alignment"])
 
         if elem.tag == "link":
             # Error Handling
@@ -47,9 +63,13 @@ def parse(context, xml):
                 elem.attrib["href"]
             except KeyError:
                 elem.attrib["href"] = ""
+            try:
+                elem.attrib["alignment"]
+            except KeyError:
+                elem.attrib["alignment"] = "left"
 
             # Add link
-            add_link(context, text=elem.text, location=elem.attrib["href"])
+            add_link(context, text=elem.text, location=elem.attrib["href"], alignment=elem.attrib["alignment"])
 
         if elem.tag == "horizontal_line":
             # Add horizontal line
@@ -71,46 +91,72 @@ def parse(context, xml):
     context.ui.statusbar.showMessage(f"Done!")
 
 
-def add_heading(context, text="", size="20", bold=False):
+def add_heading(context, text="", size="20", bold=False, alignment="left"):
     font = QFont()
     font.setPixelSize(int(size))
     if bold == "true":
         font.setBold(True)
     widget = QLabel()
     widget.setText(text)
+
+    if alignment == "left":
+        widget.setAlignment(Qt.AlignLeft)
+    elif alignment == "right":
+        widget.setAlignment(Qt.AlignRight)
+    elif alignment == "center":
+        widget.setAlignment(Qt.AlignCenter)
+
     widget.setWordWrap(True)
     widget.setFont(font)
     widget.setTextInteractionFlags(Qt.TextSelectableByMouse)
     context.ui.WebBodyLayout.addWidget(widget)
 
 
-def add_label(context, text="", size="12", bold=False):
+def add_label(context, text="", size="12", bold=False, alignment="left"):
     font = QFont()
     font.setPixelSize(int(size))
     if bold == "true":
         font.setBold(True)
     widget = QLabel()
     widget.setText(text)
+
+    if alignment == "left":
+        widget.setAlignment(Qt.AlignLeft)
+    elif alignment == "right":
+        widget.setAlignment(Qt.AlignRight)
+    elif alignment == "center":
+        widget.setAlignment(Qt.AlignCenter)
+
     widget.setWordWrap(True)
     widget.setFont(font)
     widget.setTextInteractionFlags(Qt.TextSelectableByMouse)
     context.ui.WebBodyLayout.addWidget(widget)
 
 
-def add_link(context, text="", location=""):
+def add_link(context, text="", location="", alignment="left"):
     widget = QPushButton(context.ui.scrollAreaWidgetContents)
     if text == "":
         widget.setText(location)
     else:
         widget.setText(f"{text} ({location})")
+
+    if alignment == "left":
+        widget.setStyleSheet("QPushButton {"
+                             "text-align: left;"
+                             "}")
+    elif alignment == "right":
+        widget.setStyleSheet("QPushButton {"
+                             "text-align: right;"
+                             "}")
+    elif alignment == "center":
+        widget.setStyleSheet("QPushButton {"
+                             "text-align: center;"
+                             "}")
+
     #font = QFont()
     #font_metric = QFontMetrics(font)
     #button_width = font_metric.width(text)
     #widget.setMaximumSize(QSize(button_width, 16777215))
-    # Align text to left
-    widget.setStyleSheet("QPushButton {"
-                         "text-align: left;"
-                         "}")
     widget.clicked.connect(lambda context=context, location=location: click_link(context, location))
     context.ui.WebBodyLayout.addWidget(widget)
 
