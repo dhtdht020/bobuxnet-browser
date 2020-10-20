@@ -6,7 +6,7 @@ from functools import partial
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QApplication, QMainWindow, QInputDialog, QLineEdit, QMessageBox, QSplashScreen, QLabel, \
     QListWidgetItem, QFileDialog, QListWidget
-from pip._vendor import requests
+import requests
 
 import xmlparser
 
@@ -71,7 +71,12 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
 
     def clear_page(self):
         for i in reversed(range(self.ui.WebBodyLayout.count())):
-            self.ui.WebBodyLayout.itemAt(i).widget().setParent(None)
+            try:
+                self.ui.WebBodyLayout.itemAt(i).widget().setParent(None)
+            except AttributeError:
+                item = self.ui.WebBodyLayout.itemAt(i)
+                self.ui.WebBodyLayout.removeItem(item)
+
 
     def previous_page(self):
         if len(self.history) > 0:
