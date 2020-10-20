@@ -31,8 +31,9 @@ class Ui_MainWindow(object):
         self.TopBar.setStyleSheet(u"QFrame[accessibleName=\"TopBar\"] {\n"
 "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.983, y2:0.954545, stop:0 rgba(142, 187, 255, 255), stop:1 rgba(170, 255, 255, 255));\n"
 "}")
-        self.TopBar.setFrameShape(QFrame.StyledPanel)
-        self.TopBar.setFrameShadow(QFrame.Raised)
+        self.TopBar.setFrameShape(QFrame.NoFrame)
+        self.TopBar.setFrameShadow(QFrame.Plain)
+        self.TopBar.setLineWidth(0)
         self.horizontalLayout = QHBoxLayout(self.TopBar)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.Money = QLabel(self.TopBar)
