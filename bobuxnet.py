@@ -57,20 +57,23 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
         tld = re.search(regex_tld, url).group(1)
 
         # Get path (hostname.tld/**path**)
-        #print(url)
-        #regex_path = re.compile(r'/[\s\S]*$')
-        #path = re.search(regex_path, url).group(1)
+        print(url)
+        regex_path = re.compile(r'(?<=/).*')
+        path = re.search(regex_path, url).group(0)[:-1]
+
+        if path == "":
+            path = "index.xml"
 
         print(hostname)
         print(tld)
-        #print(path)
+        print(path)
 
         self.ui.statusbar.showMessage(f"Loading {hostname}.{tld}..")
         self.repaint()
 
         # Get index
         request = requests.get(f"https://raw.githubusercontent.com/dhtdht020/bobuxnet-sites/main/"
-                     f"{tld}/{hostname}/index.xml")
+                     f"{tld}/{hostname}/{path}")
         if request.status_code == 200:
             xmlparser.parse(self, request.text)
         else:
