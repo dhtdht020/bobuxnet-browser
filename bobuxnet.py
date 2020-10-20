@@ -27,11 +27,13 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
         self.ui.setupUi(self)
         self.ui.WebBodyLayout.setAlignment(Qt.AlignTop)
         self.history = []
+        self.ui.ElementDock.close()
         self.connect_things()
 
     def connect_things(self):
         self.ui.NavigateButton.clicked.connect(partial(self.navigate_button))
         self.ui.actionReturn.triggered.connect(self.back_button)
+        self.ui.actionElement_View.triggered.connect(self.open_elementview)
 
     def navigate_button(self):
         url = self.ui.AddressBar.text()
@@ -43,6 +45,8 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
         url = self.ui.AddressBar.text()
         if url.endswith("/") is False:
             url = url + "/"
+
+        self.ui.ElementList.clear()
 
         # Get hostname (**hostname**.tld/path)
         regex_hostname = re.compile(r'([^.]+)')
@@ -76,7 +80,6 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
             xmlparser.add_link(self, "Try Again", url)
             xmlparser.add_link(self, "Go Back", self.previous_page())
 
-
     def clear_page(self):
         for i in reversed(range(self.ui.WebBodyLayout.count())):
             try:
@@ -84,7 +87,6 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
             except AttributeError:
                 item = self.ui.WebBodyLayout.itemAt(i)
                 self.ui.WebBodyLayout.removeItem(item)
-
 
     def previous_page(self):
         if len(self.history) > 0:
@@ -101,6 +103,9 @@ class MainWindow(gui.ui_web.Ui_MainWindow, QMainWindow):
             self.navigate()
         except IndexError:
             self.ui.statusbar.showMessage("There's nothing to go back to!")
+
+    def open_elementview(self):
+        self.ui.ElementDock.show()
 
 
 if __name__ == "__main__":

@@ -1,17 +1,28 @@
+import os
+import sys
 from functools import partial
 
 from PySide2.QtCore import QLine, QSize
-from PySide2.QtGui import QFont, Qt, QFontMetrics
+from PySide2.QtGui import QFont, Qt, QFontMetrics, QIcon
 import xml.etree.ElementTree as ET
 from PySide2.QtWidgets import QApplication, QMainWindow, QInputDialog, QLineEdit, QMessageBox, QSplashScreen, QLabel, \
-    QListWidgetItem, QFileDialog, QListWidget, QPushButton, QFrame, QSizePolicy, QSpacerItem
+    QListWidgetItem, QFileDialog, QListWidget, QPushButton, QFrame, QSizePolicy, QSpacerItem, QTreeWidgetItem
+
+
+# Get resource when frozen with PyInstaller
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 
 def parse(context, xml):
     content = ET.fromstring(xml)
 
     for elem in content.findall('.//page_contents/'):
-        print(elem.tag)
+        # Add to element view
+        elementview_item = QTreeWidgetItem()
+        elementview_item.setText(0, elem.tag)
 
         if elem.tag == "heading":
             # Error Handling
@@ -28,12 +39,31 @@ def parse(context, xml):
             except KeyError:
                 elem.attrib["alignment"] = "left"
 
-
             # Add heading
             add_heading(context, text=elem.text,
                         size=elem.attrib["size"],
                         bold=elem.attrib["bold"],
                         alignment=elem.attrib["alignment"])
+
+            # Add info to element list
+            text_child = QTreeWidgetItem()
+            text_child.setText(0, f'"{elem.text}"')
+            text_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/text.png")))
+
+            bold_child = QTreeWidgetItem()
+            bold_child.setText(0, f"Bold: {str(elem.attrib['bold'])}")
+            bold_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/bold.png")))
+
+            size_child = QTreeWidgetItem()
+            size_child.setText(0, f"Size: {str(elem.attrib['size'])}")
+            size_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/font_size.png")))
+
+            alignment_child = QTreeWidgetItem()
+            alignment_child.setText(0, f"Alignment: {str(elem.attrib['alignment'])}")
+            alignment_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/alignment.png")))
+
+            elementview_item.setIcon(0, QIcon(resource_path("./gui/assets/elements/heading.png")))
+            elementview_item.addChildren([text_child, bold_child, size_child, alignment_child])
 
         if elem.tag == "label":
             # Error Handling
@@ -56,6 +86,26 @@ def parse(context, xml):
                       size=elem.attrib["size"],
                       bold=elem.attrib["bold"],
                       alignment=elem.attrib["alignment"])
+
+            # Add info to element list
+            text_child = QTreeWidgetItem()
+            text_child.setText(0, f'"{elem.text}"')
+            text_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/text.png")))
+
+            bold_child = QTreeWidgetItem()
+            bold_child.setText(0, f"Bold: {str(elem.attrib['bold'])}")
+            bold_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/bold.png")))
+
+            size_child = QTreeWidgetItem()
+            size_child.setText(0, f"Size: {str(elem.attrib['size'])}")
+            size_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/font_size.png")))
+
+            alignment_child = QTreeWidgetItem()
+            alignment_child.setText(0, f"Alignment: {str(elem.attrib['alignment'])}")
+            alignment_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/alignment.png")))
+
+            elementview_item.setIcon(0, QIcon(resource_path("./gui/assets/elements/label.png")))
+            elementview_item.addChildren([text_child, bold_child, size_child, alignment_child])
 
         if elem.tag == "link":
             # Error Handling
@@ -85,6 +135,15 @@ def parse(context, xml):
             # Add Spacer
             add_spacer(context, height=elem.attrib["height"])
 
+            # Add info to element view
+            elementview_item.setIcon(0, QIcon(resource_path("./gui/assets/elements/spacer.png")))
+            height_child = QTreeWidgetItem()
+            height_child.setText(0, f"Height: {str(elem.attrib['height'])}")
+            height_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/height.png")))
+
+            elementview_item.addChildren([height_child])
+
+        context.ui.ElementList.addTopLevelItem(elementview_item)
 
     # print(elem)
     # print(content.find("page_header"))
@@ -139,24 +198,32 @@ def add_link(context, text="", location="", alignment="left"):
         widget.setText(location)
     else:
         widget.setText(f"{text} ({location})")
+        widget.setCursor(Qt.PointingHandCursor)
 
-    if alignment == "left":
-        widget.setStyleSheet("QPushButton {"
-                             "text-align: left;"
-                             "}")
-    elif alignment == "right":
-        widget.setStyleSheet("QPushButton {"
-                             "text-align: right;"
-                             "}")
-    elif alignment == "center":
-        widget.setStyleSheet("QPushButton {"
-                             "text-align: center;"
-                             "}")
+        # Set Stylesheet
+        widget.setStyleSheet(
+            f"""
+            QPushButton {{
+                text-align: {alignment};
+                background-color: transparent;
+                border : 0px solid #0000EE;
+                color: #0000EE;
+                border-bottom: 1px solid #0000EE;
+            }}
 
-    #font = QFont()
-    #font_metric = QFontMetrics(font)
-    #button_width = font_metric.width(text)
-    #widget.setMaximumSize(QSize(button_width, 16777215))
+            QPushButton:pressed {{
+                background-color: transparent;
+                border : 0px solid #ff0000;
+                color: #ff0000;
+                border-bottom: 1px solid #ff0000;
+            }}
+            """
+        )
+
+    # font = QFont()
+    # font_metric = QFontMetrics(font)
+    # button_width = font_metric.width(text)
+    # widget.setMaximumSize(QSize(button_width, 16777215))
     widget.clicked.connect(lambda context=context, location=location: click_link(context, location))
     context.ui.WebBodyLayout.addWidget(widget)
 
@@ -175,4 +242,3 @@ def add_horizontal_line(context):
 
 def add_spacer(context, height="20"):
     context.ui.WebBodyLayout.addSpacing(int(height))
-

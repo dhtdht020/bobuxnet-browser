@@ -20,9 +20,12 @@ class Ui_MainWindow(object):
         MainWindow.resize(736, 398)
         self.actionReturn = QAction(MainWindow)
         self.actionReturn.setObjectName(u"actionReturn")
+        self.actionElement_View = QAction(MainWindow)
+        self.actionElement_View.setObjectName(u"actionElement_View")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.TopBar = QFrame(self.centralwidget)
@@ -43,6 +46,7 @@ class Ui_MainWindow(object):
 
         self.AddressBar = QLineEdit(self.TopBar)
         self.AddressBar.setObjectName(u"AddressBar")
+        self.AddressBar.setStyleSheet(u"")
 
         self.horizontalLayout.addWidget(self.AddressBar)
 
@@ -69,7 +73,7 @@ class Ui_MainWindow(object):
         self.WebContents.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 736, 311))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 602, 317))
         sizePolicy1 = QSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
@@ -91,9 +95,35 @@ class Ui_MainWindow(object):
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.ElementDock = QDockWidget(MainWindow)
+        self.ElementDock.setObjectName(u"ElementDock")
+        self.ElementDock.setMinimumSize(QSize(130, 38))
+        self.ElementDock.setFeatures(QDockWidget.DockWidgetClosable)
+        self.ElementDock.setAllowedAreas(Qt.LeftDockWidgetArea)
+        self.dockWidgetContents = QWidget()
+        self.dockWidgetContents.setObjectName(u"dockWidgetContents")
+        self.verticalLayout_2 = QVBoxLayout(self.dockWidgetContents)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.ElementList = QTreeWidget(self.dockWidgetContents)
+        self.ElementList.setObjectName(u"ElementList")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.ElementList.sizePolicy().hasHeightForWidth())
+        self.ElementList.setSizePolicy(sizePolicy2)
+        self.ElementList.setRootIsDecorated(True)
+        self.ElementList.setWordWrap(True)
+        self.ElementList.setHeaderHidden(True)
+
+        self.verticalLayout_2.addWidget(self.ElementList)
+
+        self.ElementDock.setWidget(self.dockWidgetContents)
+        MainWindow.addDockWidget(Qt.LeftDockWidgetArea, self.ElementDock)
 
         self.menubar.addAction(self.menuPage.menuAction())
         self.menuPage.addAction(self.actionReturn)
+        self.menuPage.addAction(self.actionElement_View)
 
         self.retranslateUi(MainWindow)
 
@@ -106,6 +136,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.actionReturn.setShortcut(QCoreApplication.translate("MainWindow", u"Backspace", None))
 #endif // QT_CONFIG(shortcut)
+        self.actionElement_View.setText(QCoreApplication.translate("MainWindow", u"Element View", None))
 #if QT_CONFIG(accessibility)
         self.TopBar.setAccessibleName(QCoreApplication.translate("MainWindow", u"TopBar", None))
 #endif // QT_CONFIG(accessibility)
@@ -114,5 +145,8 @@ class Ui_MainWindow(object):
         self.AddressBar.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Shop Address..", None))
         self.NavigateButton.setText(QCoreApplication.translate("MainWindow", u"Navigate", None))
         self.menuPage.setTitle(QCoreApplication.translate("MainWindow", u"Page", None))
+        self.ElementDock.setWindowTitle(QCoreApplication.translate("MainWindow", u"Elements", None))
+        ___qtreewidgetitem = self.ElementList.headerItem()
+        ___qtreewidgetitem.setText(0, QCoreApplication.translate("MainWindow", u"Element", None));
     # retranslateUi
 

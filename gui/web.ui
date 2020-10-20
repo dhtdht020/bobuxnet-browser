@@ -15,6 +15,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -62,6 +65,9 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.983, y2:0.954545,
        </item>
        <item>
         <widget class="QLineEdit" name="AddressBar">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="text">
           <string>hello.com</string>
          </property>
@@ -117,8 +123,8 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.983, y2:0.954545,
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>736</width>
-         <height>311</height>
+         <width>602</width>
+         <height>317</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -147,16 +153,82 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0.983, y2:0.954545,
      <string>Page</string>
     </property>
     <addaction name="actionReturn"/>
+    <addaction name="actionElement_View"/>
    </widget>
    <addaction name="menuPage"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="ElementDock">
+   <property name="minimumSize">
+    <size>
+     <width>130</width>
+     <height>38</height>
+    </size>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetClosable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Elements</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QTreeWidget" name="ElementList">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="rootIsDecorated">
+        <bool>true</bool>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="headerHidden">
+        <bool>true</bool>
+       </property>
+       <column>
+        <property name="text">
+         <string>Element</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionReturn">
    <property name="text">
     <string>Return</string>
    </property>
    <property name="shortcut">
     <string>Backspace</string>
+   </property>
+  </action>
+  <action name="actionElement_View">
+   <property name="text">
+    <string>Element View</string>
    </property>
   </action>
  </widget>
