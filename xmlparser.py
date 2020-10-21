@@ -121,9 +121,22 @@ def parse(context, xml):
             # Add link
             add_link(context, text=elem.text, location=elem.attrib["href"], alignment=elem.attrib["alignment"])
 
+            # Add info to element list
+            location_child = QTreeWidgetItem()
+            location_child.setText(0, f"Location: {str(elem.attrib['href'])}")
+            location_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/link.png")))
+
+            alignment_child = QTreeWidgetItem()
+            alignment_child.setText(0, f"Alignment: {str(elem.attrib['alignment'])}")
+            alignment_child.setIcon(0, QIcon(resource_path("./gui/assets/elements/type/alignment.png")))
+
+            elementview_item.setIcon(0, QIcon(resource_path("./gui/assets/elements/link.png")))
+            elementview_item.addChildren([location_child, alignment_child])
+
         if elem.tag == "horizontal_line":
             # Add horizontal line
             add_horizontal_line(context)
+            elementview_item.setIcon(0, QIcon(resource_path("./gui/assets/elements/horizontal_line.png")))
 
         if elem.tag == "spacer":
             # Error Handling
